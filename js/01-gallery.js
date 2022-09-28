@@ -37,7 +37,6 @@ function createGalleryItemsMarkup (items) {
 
 function onImageClick(event) {
     event.preventDefault()
-    refs.galleryBox.addEventListener('keydown', onImageCloseKeydown )
 
     if(event.target.nodeName !== "IMG") {
     return
@@ -45,21 +44,21 @@ function onImageClick(event) {
 
     instance = basicLightbox.create(`
     <img src="${event.target.dataset.source}">`
-    )
+    ,{
+        onShow: () => {document.addEventListener('keydown', onImageCloseKeydown )
+    },
 
-    instance.show()
+	onClose: () => {document.removeEventListener('keydown', onImageCloseKeydown )
+    }
+    })
 
-    
-
+    instance.show() 
 }
 
 function onImageCloseKeydown(event) {
 
     if( event.code === "Escape") {
-
         instance.close()
-        refs.galleryBox.removeEventListener('keydown', onImageCloseKeydown )
-
         }
 }
 
